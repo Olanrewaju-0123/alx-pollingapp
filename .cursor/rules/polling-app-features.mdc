@@ -1,0 +1,43 @@
+# Additional Polling App Rules
+
+## QR Code & Sharing Patterns
+- Use `qrcode.react` library for QR code generation
+- Generate unique share URLs using UUIDs
+- QR codes should link directly to poll voting page
+- Share URLs pattern: `/polls/[id]/vote` or `/share/[shareId]`
+
+## Form Validation Patterns
+- Use Zod schemas for form validation
+- Validate poll questions (min 10 chars, max 200 chars)
+- Validate poll options (2-10 options, each 1-100 chars)
+- Show field-level error messages using shadcn/ui
+
+Example Zod schema:
+```typescript
+const pollSchema = z.object({
+  question: z.string().min(10).max(200),
+  options: z.array(z.string().min(1).max(100)).min(2).max(10),
+  expiresAt: z.date().optional()
+})
+```
+
+## Real-time Updates
+- Use Supabase Realtime for live vote counting
+- Update poll results without page refresh
+- Show "someone just voted" notifications
+- Handle concurrent voting gracefully
+
+## Error Boundaries & Loading States
+- Wrap poll components in error boundaries
+- Show loading skeletons for poll lists
+- Handle network errors gracefully
+- Provide retry mechanisms for failed votes
+
+## URL Patterns (Specific Routes)
+- `/` - Home page with recent polls
+- `/polls` - All polls listing  
+- `/polls/create` - Create new poll
+- `/polls/[id]` - Poll details and voting
+- `/polls/[id]/results` - Results page
+- `/polls/[id]/edit` - Edit poll (creator only)
+- `/share/[shareId]` - Direct voting via share link

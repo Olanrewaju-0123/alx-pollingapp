@@ -1,0 +1,57 @@
+# Supabase Integration Patterns
+
+## Database Setup
+- Use Supabase client for all database operations
+- Set up proper Row Level Security (RLS) policies
+- Use TypeScript types generated from Supabase schema
+
+## Authentication Patterns
+- Use Supabase Auth for user management
+- Check authentication status in Server Components
+- Handle auth redirects properly
+
+## Database Schema Requirements
+
+### polls table:
+```sql
+CREATE TABLE polls (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  question TEXT NOT NULL,
+  options JSONB NOT NULL,
+  created_by UUID REFERENCES auth.users(id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  expires_at TIMESTAMP WITH TIME ZONE,
+  share_url TEXT UNIQUE
+);
+```
+
+### votes table:
+```sql
+CREATE TABLE votes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  poll_id UUID REFERENCES polls(id) ON DELETE CASCADE,
+  option_index INTEGER NOT NULL,
+  voter_id UUID,
+  voted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
+
+## Server Actions Patterns
+- Always validate input data
+- Handle errors gracefully
+- Return proper success/error responses
+- Use revalidatePath() when data changes
+
+Example:
+```typescript
+export async function createPoll(formData: FormData) {
+  try {
+    const supabase = createServerClient()
+    // validation and insertion logic
+    revalidatePath('/polls')
+    return { success: true }
+  } catch (error) {
+    return { error: 'Failed to create poll' }
+  }
+}
+```

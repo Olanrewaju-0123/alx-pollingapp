@@ -5,12 +5,12 @@ export default function HomePage() {
     <main className="min-h-screen flex flex-col items-center justify-center gap-6">
       <h1 className="text-3xl font-bold">Welcome to ALX Polly</h1>
       <div className="flex gap-4">
-        <Link href="/dashboard/polls">
+        <Link href="/polls">
           <button className="bg-black text-white px-4 py-2 rounded">
             My Polls
           </button>
         </Link>
-        <Link href="/dashboard/create">
+        <Link href="/polls/create">
           <button className="bg-black text-white px-4 py-2 rounded">
             Create Poll
           </button>
